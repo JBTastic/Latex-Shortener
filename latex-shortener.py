@@ -1,5 +1,6 @@
 import fitz  # PyMuPDF
 import os
+import re  # Für reguläre Ausdrücke
 
 def extract_last_pages(input_pdf, output_pdf):
     # Öffnen der Original-PDF
@@ -8,6 +9,9 @@ def extract_last_pages(input_pdf, output_pdf):
     # Dictionary, um die letzte Instanz jeder Seitenzahl zu speichern
     page_numbers = {}
 
+    # Neues Dokument für die Ausgabe erstellen
+    new_document = fitz.open()
+
     # Durch alle Seiten iterieren
     for page_num in range(document.page_count):
         page = document.load_page(page_num)  # Seite laden
@@ -15,21 +19,23 @@ def extract_last_pages(input_pdf, output_pdf):
         # Den Text der Seite extrahieren
         page_text = page.get_text("text")
         
-        # Suchen nach der Seitenzahl im Format "X/Y"
-        lines = page_text.split('\n')
-        for line in lines:
-            if '/' in line:  # Sucht nach der Form X/Y
+        # Prüfen, ob ein Slash ("/") im Text ist
+        if "/" in page_text:
+            matches = re.findall(r"(\d+)\s*/\s*(\d+)", page_text)  # Suche nach Mustern wie "X / Y"
+            if matches:
+                # Nimm das letzte gefundene Paar
+                last_match = matches[-1]
                 try:
-                    page_num_text, total_pages = map(int, line.split('/'))
+                    page_num_text, total_pages = map(int, last_match)
                     page_numbers[page_num_text] = page_num
                 except ValueError:
-                    pass  # Falls die Zeile keine gültige Seitenzahl enthält, überspringen
+                    pass  # Falls das Match keine gültige Zahl ist, überspringen
+        else:
+            # Falls kein Slash vorhanden ist, füge die Seite direkt hinzu
+            new_document.insert_pdf(document, from_page=page_num, to_page=page_num)
 
-    # Neues Dokument für die Ausgabe erstellen
-    new_document = fitz.open()
-
-    # Seiten in der Reihenfolge der letzten Instanzen hinzufügen
-    for page_num in sorted(page_numbers.values()):
+    # Seiten mit gültigen Seitenzahlen hinzufügen (nur letzte Instanz jeder Seitenzahl)
+    for page_num in sorted(set(page_numbers.values())):
         page = document.load_page(page_num)
         new_document.insert_pdf(document, from_page=page_num, to_page=page_num)
 
