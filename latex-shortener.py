@@ -1,4 +1,5 @@
 import fitz  # PyMuPDF
+import os
 
 def extract_last_pages(input_pdf, output_pdf):
     # Öffnen der Original-PDF
@@ -36,7 +37,15 @@ def extract_last_pages(input_pdf, output_pdf):
     new_document.save(output_pdf)
     print(f"Neue PDF mit den gewünschten Seiten wurde gespeichert als '{output_pdf}'")
 
-# Beispiel: Extrahiere die letzten Instanzen jeder Seitenzahl und speichere sie in einer neuen PDF
-input_pdf = str(input("Name of the input PDF: "))
-output_pdf = f"no_duplicates_{input_pdf}"
+# Den Benutzer nach dem Dateinamen fragen
+input_pdf_name = str(input("Name of the input PDF: "))
+
+# Den Pfad zur Eingabedatei im "PDFs"-Ordner erstellen
+input_pdf = os.path.join("PDFs", input_pdf_name)
+
+# Den Pfad zur Ausgabedatei im "PDFs"-Ordner erstellen (mit "no_duplicates_" Präfix)
+output_pdf_name = f"no_duplicates_{input_pdf_name}"
+output_pdf = os.path.join("PDFs", output_pdf_name)
+
+# Die Funktion aufrufen, um die PDF zu verarbeiten
 extract_last_pages(input_pdf, output_pdf)
