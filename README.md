@@ -1,4 +1,22 @@
-﻿# Latex Shortener
-Shortens a PDF created with Latex so only unique pages are left.
-To use, first "pip install fitz", then "pip install PyMuPDF", then put the PDF you want to shorten in the "PDFs" folder, run the script, on the input field write the name of your pdf together with the .pdf ending.
-Your shortened PDF will appear next to the original one in the "PDFs" folder!
+# PDF Shortener Script
+
+This Python-Script shortens a PDF-file that has page-numbers written in it by only keeping unique pages.
+
+## Requirements
+
+Install required libraries:
+   ```bash
+   pip install fitz
+   pip install PyMuPDF
+   ```
+
+## Usage
+
+1. Put the PDF-file you want to shorten in the `PDFs` folder.
+2. Start the script.
+3. Enter the name of your PDF-file in the format `<name>.pdf` when prompted to.
+
+The script creates a new, shortened version of your PDF and saves it in the same folder. It has the same name as the original with the added prefix `"no_duplicates_"`.
+
+## Notice
+- On Arch Linux you only need to install `PyMuPDF`.
