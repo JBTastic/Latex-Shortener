@@ -19,4 +19,6 @@ Install required libraries:
 The script creates a new, shortened version of your PDF and saves it in the same folder. It has the same name as the original with the added prefix `"no_duplicates_"`.
 
 ## Notice
-- On Arch Linux you only need to install `PyMuPDF`.
+- On Arch Linux you only need to install `PyMuPDF` with this command:
+  ```bash
+  sudo pacman -S python-PyMuPDF
